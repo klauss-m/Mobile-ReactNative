@@ -1,111 +1,111 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
-import type {Node} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
+  Text,
+  Button,
+  StyleSheet,
+  Image,
+  TextInput,
+  Alert,
+  SafeAreaView,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+function App() {
+  let img =
+    'https://pt.calcuworld.com/wp-content/uploads/sites/6/2019/11/imc-gravidez.png';
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+  const [peso, setPeso] = useState(0);
+  const [altura, setAltura] = useState(0);
+  const [resultado, setResultado] = useState(0);
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const calcImc = () => {
+    // if (peso === 0 || !peso) {
+    //   Alert.alert('Informe um valor correto para o peso!');
+    //   return;
+    // }
+    // if (altura === 0 || !altura) {
+    //   alert('Informe um valor correto para a altura!');
+    //   return;
+    // }
+    const result = peso / Math.pow(altura, 2);
+    setResultado(result.toFixed(1));
   };
 
+  let nivelImc = '';
+  if (resultado <= 18.5) {
+    nivelImc = 'IMC baixo';
+  }
+  if (resultado >= 18.6 && resultado <= 24.9) {
+    nivelImc = 'IMC normal';
+  }
+  if (resultado >= 25 && resultado <= 29.9) {
+    nivelImc = 'sobrepeso';
+  }
+  if (resultado >= 30 && resultado <= 34.9) {
+    nivelImc = 'obesidade I';
+  }
+  if (resultado >= 35 && resultado <= 39.9) {
+    nivelImc = 'obesidade II';
+  }
+  if (resultado >= 40) {
+    nivelImc = 'obesidade III';
+  }
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView>
+      <Image
+        source={{
+          uri: img,
+        }}
+        style={styles.logo}
+      />
+      <Text style={styles.appTitle}>Cálculadora de IMC!</Text>
+      <TextInput
+        placeholder="Peso"
+        style={styles.appInput}
+        keyboardType="numeric"
+        onChangeText={text => setPeso(text)}
+        value={peso}
+      />
+      <TextInput
+        placeholder="Altura"
+        keyboardType="numeric"
+        style={styles.appInput}
+        onChangeText={text => setAltura(text)}
+        value={altura}
+      />
+      <Button title="Cálcular" onPress={calcImc} />
+      <Text style={styles.appResult}>
+        O seu IMC é de {resultado} que significa que você tem {nivelImc}
+      </Text>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  appBackground: {
+    backgroundColor: 'blue',
+    flex: 1,
   },
-  sectionTitle: {
+  appTitle: {
     fontSize: 24,
-    fontWeight: '600',
+    textAlign: 'center',
+    color: '#FF0000',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  logo: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    marginTop: 20,
   },
-  highlight: {
-    fontWeight: '700',
+  appInput: {
+    margin: 10,
+    borderWidth: 1,
+    padding: 8,
+    height: 40,
+  },
+  appResult: {
+    fontSize: 20,
   },
 });
 
