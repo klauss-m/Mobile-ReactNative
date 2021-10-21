@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Image,
   TextInput,
-  Alert,
   SafeAreaView,
 } from 'react-native';
 
@@ -19,14 +18,6 @@ function App() {
   const [resultado, setResultado] = useState(0);
 
   const calcImc = () => {
-    // if (peso === 0 || !peso) {
-    //   Alert.alert('Informe um valor correto para o peso!');
-    //   return;
-    // }
-    // if (altura === 0 || !altura) {
-    //   alert('Informe um valor correto para a altura!');
-    //   return;
-    // }
     const result = peso / Math.pow(altura, 2);
     setResultado(result.toFixed(1));
   };
@@ -61,23 +52,26 @@ function App() {
       />
       <Text style={styles.appTitle}>Cálculadora de IMC!</Text>
       <TextInput
-        placeholder="Peso"
+        placeholder="Peso: Exemplo 86"
         style={styles.appInput}
         keyboardType="numeric"
         onChangeText={text => setPeso(text)}
         value={peso}
       />
       <TextInput
-        placeholder="Altura"
+        placeholder="Altura: Exemplo 1.80"
         keyboardType="numeric"
         style={styles.appInput}
         onChangeText={text => setAltura(text)}
         value={altura}
       />
       <Button title="Cálcular" onPress={calcImc} />
-      <Text style={styles.appResult}>
-        O seu IMC é de {resultado} que significa que você tem {nivelImc}
-      </Text>
+      <View style={styles.appView}>
+        <Text style={styles.appResult}>O seu IMC é de {resultado}</Text>
+      </View>
+      <View style={styles.appView}>
+        <Text style={styles.appResult}>Resultado: {nivelImc}</Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -106,6 +100,11 @@ const styles = StyleSheet.create({
   },
   appResult: {
     fontSize: 20,
+    alignSelf: 'center',
+  },
+  appView: {
+    margin: 20,
+    alignContent: 'center',
   },
 });
 
