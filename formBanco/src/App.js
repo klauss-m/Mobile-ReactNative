@@ -97,7 +97,7 @@ function FormBanco() {
         <Text style={styles.textInfo}>{submit ? `Idade: ${idade}` : ''}</Text>
         <Text style={styles.textInfo}>{submit ? `Gênero: ${gender}` : ''}</Text>
         <Text style={styles.textInfo}>
-          {submit ? `Limite da Conta: ${limiteConta}` : ''}
+          {submit ? `Limite da Conta: R$${limiteConta}` : ''}
         </Text>
         <Text style={styles.textInfo}>
           {submit
