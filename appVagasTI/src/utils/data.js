@@ -11,7 +11,7 @@ const vagas = [
     titulo: 'Desenvolvedor Back-End',
     descricao: 'Vaga para desenvolvedor back-end',
     salario: 'R$ 3.000,00',
-    cidade: 'São Paulo',
+    cidade: 'Rio de Janeiro',
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ const vagas = [
     titulo: 'Desenvolvedor Mobile',
     descricao: 'Vaga para desenvolvedor mobile',
     salario: 'R$ 3.000,00',
-    cidade: 'São Paulo',
+    cidade: 'Porto Alegre',
   },
   {
     id: 5,
