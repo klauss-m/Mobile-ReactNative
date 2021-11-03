@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Switch} from 'react-native';
 import styles from './styles/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,12 +9,15 @@ export default function App() {
   const [dia, setDia] = useState(true);
   const [pequeno, setPequeno] = useState(false);
 
-  const SearchQuote = async key => {
-    const value = await AsyncStorage.getItem(key);
-    setQuote(value);
-  };
+  useEffect(() => {
+    async function getQuote() {
+      const key = Math.floor(Math.random() * 7 + 1).toString();
+      const value = await AsyncStorage.getItem(key);
+      setQuote(value);
+    }
 
-  SearchQuote(Math.floor(Math.random() * 7 + 1).toString());
+    getQuote();
+  }, [setQuote]);
 
   const textChange = () => {
     if (dia && !pequeno) {
