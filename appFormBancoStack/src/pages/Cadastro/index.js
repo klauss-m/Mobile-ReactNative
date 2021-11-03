@@ -36,13 +36,13 @@ export function Cadastro() {
       <Text style={styles.text}>Idade</Text>
       <TextInput style={styles.input} onChangeText={setIdade} keyboardType='numeric' />
       <Text style={styles.text}>Gênero</Text>
-      <Picker style={styles.picker} selectedValue={gender} onValueChange={setGender}>
+      <Picker selectedValue={gender} onValueChange={setGender}>
         <Picker.Item label='Masculino' value='Masculino' />
         <Picker.Item label='Feminino' value='Feminino' />
         <Picker.Item label='Outro' value='Outro' />
       </Picker>
       <Text style={styles.text}>Escolaridade</Text>
-      <Picker style={styles.picker} selectedValue={escolaridade} onValueChange={setEscolaridade}>
+      <Picker selectedValue={escolaridade} onValueChange={setEscolaridade}>
         <Picker.Item label='Ensino Fundamental' value='Ensino Fundamental' />
         <Picker.Item label='Ensino Médio' value='Ensino Médio' />
         <Picker.Item label='Ensino Superior' value='Ensino Superior' />
@@ -57,9 +57,13 @@ export function Cadastro() {
         step={10}
         onValueChange={setLimiteConta}
       />
-      <Text style={styles.sliderText}>{limiteConta}</Text>
+      <Text style={styles.sliderText}>R${limiteConta}</Text>
       <Text style={styles.text}>Brasileiro?</Text>
-      <Switch value={isBrasileiro} onValueChange={() => setIsBrasileiro(!isBrasileiro)} />
+      <Switch
+        value={isBrasileiro}
+        onValueChange={() => setIsBrasileiro(!isBrasileiro)}
+        style={styles.switch}
+      />
       <Pressable
         style={styles.button}
         onPress={() => {

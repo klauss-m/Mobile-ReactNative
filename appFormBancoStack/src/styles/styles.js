@@ -28,10 +28,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 10,
     padding: 10,
-  },
-  inputText: {
-    fontSize: 20,
-    color: '#000',
+    borderRadius: 5,
   },
   inputContainer: {
     flex: 1,
@@ -39,61 +36,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerText: {
-    fontSize: 20,
-    color: '#000',
-  },
-  picker: {
-    height: 40,
-    borderColor: '#000',
-    borderWidth: 1,
-    margin: 10,
-    padding: 10,
-  },
-  pickerText: {
-    fontSize: 20,
-    color: '#000',
-  },
-  pickerContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  slider: {
-    width: '100%',
-    height: 40,
-    margin: 10,
-  },
   sliderText: {
     fontSize: 20,
     color: '#000',
     alignSelf: 'center',
   },
-  sliderContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   switch: {
     margin: 10,
-  },
-  switchText: {
-    fontSize: 20,
-    color: '#000',
-  },
-  switchContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 })
 
