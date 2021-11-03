@@ -91,7 +91,7 @@ export default function App() {
       {submit && (
         <View>
           <Text style={styles.text}>
-            {moeda2}: {resultado}
+            {moeda2}: {resultado.toFixed(2)}
           </Text>
           <Pressable style={styles.button} onPress={clear}>
             <Text style={styles.buttonText}>Limpar</Text>
