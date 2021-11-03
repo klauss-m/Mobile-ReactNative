@@ -17,7 +17,7 @@ export default function App() {
     }
 
     getQuote();
-  }, [setQuote]);
+  }, []);
 
   const textChange = () => {
     if (dia && !pequeno) {
