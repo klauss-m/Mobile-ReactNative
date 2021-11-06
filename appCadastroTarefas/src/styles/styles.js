@@ -1,0 +1,122 @@
+import {StyleSheet} from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  card: {
+    flex: 1,
+    margin: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderBottomWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
+    backgroundColor: '#fff',
+  },
+  cardHeaderFinished: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    backgroundColor: '#fad370',
+  },
+  cardHeaderPending: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    backgroundColor: '#70fab0',
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cardContent: {
+    padding: 10,
+  },
+  cardFooter: {
+    padding: 10,
+    backgroundColor: '#ddd',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  cardDescription: {
+    fontSize: 16,
+    color: '#333',
+  },
+  cardButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  cardButtonDelText: {
+    fontSize: 15,
+    color: '#e0416c',
+    paddingHorizontal: 10,
+  },
+  cardButtonFinText: {
+    fontSize: 15,
+    color: '#007335',
+    paddingHorizontal: 10,
+  },
+  appTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#444',
+    marginBottom: 10,
+  },
+  inputDesc: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: '#444',
+    height: 80,
+    width: '100%',
+    marginBottom: 10,
+    borderRadius: 2,
+  },
+  inputTitle: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: '#444',
+    height: 50,
+    width: '100%',
+    marginBottom: 10,
+    borderRadius: 2,
+  },
+  newTaskButton: {
+    backgroundColor: '#00b7ff',
+    height: 44,
+    width: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 2,
+    marginBottom: 10,
+  },
+  addButton: {
+    backgroundColor: '#00b7ff',
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 2,
+    marginBottom: 10,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
+
+export default styles;
