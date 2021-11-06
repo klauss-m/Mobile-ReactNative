@@ -1,32 +1,50 @@
 import React, {useState} from 'react';
-import {View, Text, Pressable} from 'react-native';
+import {View, Text, Pressable, Image, ScrollView} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+
 import styles from './styles/styles';
+
+import {Movies} from './pages/Movies';
+import {Info} from './pages/Info';
 
 import api from './services/api';
 
+const Stack = createStackNavigator();
+
 export default function App() {
-  const [filmes, setFilmes] = useState([]);
-
-  async function loadFilmes() {
-    const response = await api.get('filmes');
-
-    setFilmes(response.data);
-  }
-  console.log(filmes);
-
   return (
-    <View>
-      <Text style={styles.title}>Lista de filmes</Text>
-      <Pressable onPress={loadFilmes} style={styles.button}>
-        <Text style={styles.buttonText}>Carregar filmes</Text>
-      </Pressable>
-      <View style={styles.list}>
-        {filmes.map(filme => (
-          <View key={filme.id} style={styles.item}>
-            <Text style={styles.itemText}>{filme.nome}</Text>
-          </View>
-        ))}
-      </View>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Movies"
+          component={Movies}
+          options={{
+            title: 'Filmes',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Info"
+          component={Info}
+          options={{
+            title: 'Sinopse do Filme',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

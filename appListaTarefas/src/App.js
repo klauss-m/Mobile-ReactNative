@@ -1,111 +1,159 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, Pressable, FlatList} from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import {View, Text, StatusBar, TextInput, Button, FlatList} from 'react-native';
 import {openDatabase} from 'react-native-sqlite-storage';
-import styles from './styles/styles';
+import CheckBox from '@react-native-community/checkbox';
 
-const db = openDatabase({name: 'tarefas.db'});
+const db = openDatabase({
+  name: 'tarefas',
+});
 
-export default function App() {
-  const [tarefas, setTarefas] = useState([]);
+const App = () => {
   const [tarefa, setTarefa] = useState('');
+  const [tarefas, setTarefas] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
 
-  const createTable = () => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS tarefas (id INTEGER PRIMARY KEY AUTOINCREMENT, tarefa TEXT, status INTEGER)',
+  const createTables = () => {
+    db.transaction(txn => {
+      txn.executeSql(
+        'CREATE TABLE IF NOT EXISTS tarefas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome VARCHAR(20), status BOOLEAN)',
         [],
-        () => {
-          console.log('Tabela criada com sucesso');
+        (sqlTxn, res) => {
+          console.log('Tabela criada com sucesso!');
         },
         error => {
-          console.log('Erro ao criar tabela: ' + error);
+          console.log('error on creating table ' + error.message);
         },
       );
     });
   };
 
-  const insertTarefa = () => {
-    db.transaction(tx => {
-      tx.executeSql('INSERT INTO tarefas (tarefa, status) VALUES (?, ?)', [
-        tarefa,
-        isChecked ? 1 : 0,
-      ]);
+  const incluirTarefa = () => {
+    if (!tarefa) {
+      alert('Escreva uma tarefa a ser adicionada!');
+      return false;
+    }
+
+    db.transaction(txn => {
+      txn.executeSql(
+        'INSERT INTO tarefas (nome) VALUES (?)',
+        [tarefa],
+        (sqlTxn, res) => {
+          console.log(`${tarefa} Tarefa adicionada com sucesso!`);
+          selectTarefas();
+          setTarefa('');
+        },
+        error => {
+          console.log('Erro ao inserir uma Tarefa ' + error.message);
+        },
+      );
     });
   };
 
   const selectTarefas = () => {
-    db.transaction(tx => {
-      tx.executeSql('SELECT * FROM tarefas', [], (Sqltx, res) => {
-        let len = results.rows.length;
-        let results = [];
-        for (let i = 0; i < len; i++) {
-          tarefas.push({
-            id: res.rows.item(i).id,
-            tarefa: res.rows.item(i).tarefa,
-            status: res.rows.item(i).status,
-          });
-        }
-        setTarefas(tarefas);
-      });
+    db.transaction(txn => {
+      txn.executeSql(
+        `SELECT * FROM tarefas ORDER BY id DESC`,
+        [],
+        (sqlTxn, res) => {
+          console.log('Tarefas lidas com sucesso!');
+          let len = res.rows.length;
+
+          if (len > 0) {
+            let results = [];
+            for (let i = 0; i < len; i++) {
+              let item = res.rows.item(i);
+              results.push({id: item.id, nome: item.nome, status: item.status});
+            }
+
+            setTarefas(results);
+          }
+        },
+        error => {
+          console.log('Erro ao obter Tarefas ' + error.message);
+        },
+      );
     });
   };
 
   const updateTarefa = (id, status) => {
-    db.transaction(tx => {
-      tx.executeSql('UPDATE tarefas SET status = ? WHERE id = ?', [status, id]);
+    db.transaction(txn => {
+      txn.executeSql(
+        'UPDATE tarefas SET status = ? WHERE id = ?',
+        [status, id],
+        (sqlTxn, res) => {
+          console.log('Tarefa atualizada com sucesso!');
+          selectTarefas();
+        },
+        error => {
+          console.log('Erro ao atualizar Tarefa ' + error.message);
+        },
+      );
     });
   };
 
   const deleteTarefa = id => {
-    db.transaction(tx => {
-      tx.executeSql('DELETE FROM tarefas WHERE id = ?', [id]);
+    db.transaction(txn => {
+      txn.executeSql(
+        'DELETE FROM tarefas WHERE id = ?',
+        [id],
+        (sqlTxn, res) => {
+          console.log('Tarefa excluída com sucesso!');
+        },
+        error => {
+          console.log('Erro ao excluir Tarefa ' + error.message);
+        },
+      );
     });
   };
 
-  const renderItem = ({item}) => {
+  const renderTarefa = ({item}) => {
     return (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <CheckBox
-          value={item.status === 1}
-          onValueChange={() => updateTarefa(item.id, item.status === 1 ? 0 : 1)}
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingVertical: 12,
+          paddingHorizontal: 10,
+          borderBottomWidth: 1,
+          borderColor: '#ddd',
+        }}>
+        <Text style={{marginRight: 9}}>{item.id}</Text>
+        <Text>{item.nome}</Text>
+        <Button
+          title="Excluir"
+          color="#f00"
+          onPress={() => {
+            deleteTarefa(item.id);
+          }}
         />
-        <Text>{item.tarefa}</Text>
-        <Pressable
-          style={styles.buttonDelete}
-          onPress={() => deleteTarefa(item.id)}>
-          <Text>X</Text>
-        </Pressable>
       </View>
     );
   };
 
   useEffect(() => {
-    createTable();
-    selectTarefas();
-    //eslint-disable-next-line react-hooks/exhaustive-deps
+    createTables();
+    deleteTarefa();
   }, []);
 
   return (
-    <View style={{flex: 1, padding: 20}}>
+    <View>
+      <StatusBar backgroundColor="#222" />
+
       <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={text => setTarefa(text)}
+        placeholder="Digite sua tarefa"
         value={tarefa}
+        onChangeText={setTarefa}
+        style={{marginHorizontal: 8}}
       />
-      <CheckBox
-        value={isChecked}
-        onValueChange={() => setIsChecked(!isChecked)}
-      />
-      <Pressable style={styles.buttonSave} onPress={() => insertTarefa()}>
-        <Text style={styles.buttonSaveText}>Salvar</Text>
-      </Pressable>
+
+      <Button title="Salvar" onPress={incluirTarefa} />
+
       <FlatList
         data={tarefas}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        renderItem={renderTarefa}
+        key={item => item.id}
       />
     </View>
   );
-}
+};
+
+export default App;
