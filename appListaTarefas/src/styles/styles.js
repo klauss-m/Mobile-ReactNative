@@ -23,15 +23,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 16,
   },
-  buttonDelete: {
-    backgroundColor: '#E33D3D',
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-    width: 40,
-  },
   buttonDeleteText: {
     color: '#FFF',
     fontFamily: 'Archivo_700Bold',
@@ -49,6 +40,13 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontFamily: 'Archivo_700Bold',
     fontSize: 16,
+  },
+  task: {
+    flexDirection: 'row',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
   },
 });
 

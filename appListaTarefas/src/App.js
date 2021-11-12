@@ -1,46 +1,60 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StatusBar, TextInput, Button, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  StatusBar,
+  TextInput,
+  Button,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {openDatabase} from 'react-native-sqlite-storage';
 import CheckBox from '@react-native-community/checkbox';
+import styles from './styles/styles';
 
 const db = openDatabase({
-  name: 'tarefas',
+  name: 'tasks',
 });
 
 const App = () => {
-  const [tarefa, setTarefa] = useState('');
-  const [tarefas, setTarefas] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
+  const [task, setTask] = useState('');
+  const [tasks, setTasks] = useState([]);
+
+  //eslint-disable-next-line
+  useEffect(async () => {
+    await createTables();
+    await selectTasks();
+  }, []);
 
   const createTables = () => {
     db.transaction(txn => {
       txn.executeSql(
-        'CREATE TABLE IF NOT EXISTS tarefas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome VARCHAR(20), status BOOLEAN)',
+        `CREATE TABLE IF NOT EXISTS tarefas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome VARCHAR(20)), completed BOOL`,
         [],
         (sqlTxn, res) => {
           console.log('Tabela criada com sucesso!');
         },
         error => {
-          console.log('error on creating table ' + error.message);
+          console.log('erro ao criar tabela ' + error.message);
         },
       );
     });
   };
 
-  const incluirTarefa = () => {
-    if (!tarefa) {
-      alert('Escreva uma tarefa a ser adicionada!');
+  const insertTask = () => {
+    if (!task) {
+      alert('Escreva uma tarefa');
       return false;
     }
 
     db.transaction(txn => {
       txn.executeSql(
-        'INSERT INTO tarefas (nome) VALUES (?)',
-        [tarefa],
+        `INSERT INTO tarefas (nome) VALUES (?)`,
+        [task],
         (sqlTxn, res) => {
-          console.log(`${tarefa} Tarefa adicionada com sucesso!`);
-          selectTarefas();
-          setTarefa('');
+          console.log(`${task} Tarefa adicionada com sucesso!`);
+          selectTasks();
+          setTask('');
         },
         error => {
           console.log('Erro ao inserir uma Tarefa ' + error.message);
@@ -49,7 +63,7 @@ const App = () => {
     });
   };
 
-  const selectTarefas = () => {
+  const selectTasks = () => {
     db.transaction(txn => {
       txn.executeSql(
         `SELECT * FROM tarefas ORDER BY id DESC`,
@@ -62,10 +76,10 @@ const App = () => {
             let results = [];
             for (let i = 0; i < len; i++) {
               let item = res.rows.item(i);
-              results.push({id: item.id, nome: item.nome, status: item.status});
+              results.push({id: item.id, nome: item.nome});
             }
 
-            setTarefas(results);
+            setTasks(results);
           }
         },
         error => {
@@ -75,14 +89,14 @@ const App = () => {
     });
   };
 
-  const updateTarefa = (id, status) => {
+  const completeTask = (id, completed) => {
     db.transaction(txn => {
       txn.executeSql(
-        'UPDATE tarefas SET status = ? WHERE id = ?',
-        [status, id],
+        `UPDATE tarefas SET completed = ? WHERE id = ?`,
+        [completed, id],
         (sqlTxn, res) => {
           console.log('Tarefa atualizada com sucesso!');
-          selectTarefas();
+          selectTasks();
         },
         error => {
           console.log('Erro ao atualizar Tarefa ' + error.message);
@@ -91,16 +105,17 @@ const App = () => {
     });
   };
 
-  const deleteTarefa = id => {
+  const deleteTask = id => {
     db.transaction(txn => {
       txn.executeSql(
-        'DELETE FROM tarefas WHERE id = ?',
+        `DELETE FROM tarefas WHERE id = ?`,
         [id],
         (sqlTxn, res) => {
-          console.log('Tarefa excluída com sucesso!');
+          console.log('Tarefa deletada com sucesso!');
+          selectTasks();
         },
         error => {
-          console.log('Erro ao excluir Tarefa ' + error.message);
+          console.log('erro ao deletar tarefa ' + error.message);
         },
       );
     });
@@ -118,40 +133,45 @@ const App = () => {
         }}>
         <Text style={{marginRight: 9}}>{item.id}</Text>
         <Text>{item.nome}</Text>
-        <Button
-          title="Excluir"
-          color="#f00"
-          onPress={() => {
-            deleteTarefa(item.id);
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            right: 50,
+            top: 10,
           }}
+          onPress={() => deleteTask(item.id)}>
+          <Text style={styles.buttonDeleteText}>X</Text>
+        </TouchableOpacity>
+
+        <CheckBox
+          style={{
+            position: 'absolute',
+            right: 15,
+            top: 10,
+          }}
+          value={item.completed}
+          onValueChange={() => completeTask(item.id, !item.completed)}
         />
       </View>
     );
   };
 
-  useEffect(() => {
-    createTables();
-    deleteTarefa();
-  }, []);
-
   return (
-    <View>
+    <View style={styles.container}>
       <StatusBar backgroundColor="#222" />
-
+      <Text style={styles.title}>Tarefas</Text>
       <TextInput
-        placeholder="Digite sua tarefa"
-        value={tarefa}
-        onChangeText={setTarefa}
-        style={{marginHorizontal: 8}}
+        placeholder="Informe uma tarefa"
+        value={task}
+        onChangeText={setTask}
+        style={styles.text}
       />
 
-      <Button title="Salvar" onPress={incluirTarefa} />
+      <TouchableOpacity onPress={insertTask} style={styles.buttonSave}>
+        <Text style={styles.buttonSaveText}>+</Text>
+      </TouchableOpacity>
 
-      <FlatList
-        data={tarefas}
-        renderItem={renderTarefa}
-        key={item => item.id}
-      />
+      <FlatList data={tasks} renderItem={renderTarefa} key={t => t.id} />
     </View>
   );
 };
